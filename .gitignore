@@ -1,39 +1,69 @@
 ```
-# Mini-program specific ignores
-miniprogram/.swan/
-miniprogram/dist/
-miniprogram/build/
-miniprogram/node_modules/
-
-# Logs and temporary files
-*.log
-*.tmp
-*.swp
-
-# Environment files
-.env
-.env.local
-*.env.*
-
-# Editors
-.vscode/
-.idea/
-
-# Python (if applicable)
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-
-# Node.js (if applicable)
+# Dependencies
 node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
 
 # Build outputs
 dist/
 build/
+*.mp[miniprogram]
+
+# Logs
+*.log
+
+# Environment variables
+.env
+.env.local
+*.env.*
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+
+# Coverage
 coverage/
-.nyc_output/
+htmlcov/
+.coverage
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+
+# Compressed files
+*.zip
+*.gz
+*.tar
+*.tgz
+*.bz2
+*.xz
+*.7z
+*.rar
+*.zst
+*.lz4
+*.lzh
+*.cab
+*.arj
+*.rpm
+*.deb
+*.Z
+*.lz
+*.lzo
+*.tar.gz
+*.tar.bz2
+*.tar.xz
+*.tar.zst
 ```
