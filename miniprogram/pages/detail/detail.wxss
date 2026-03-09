@@ -1,0 +1,138 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #f3f4f6;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20rpx 30rpx;
+  background-color: #fff;
+  border-bottom: 1rpx solid #e5e7eb;
+}
+
+.back-btn {
+  font-size: 30rpx;
+  color: #3b82f6;
+}
+
+.header-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.edit-btn {
+  font-size: 28rpx;
+  color: #3b82f6;
+}
+
+.content {
+  flex: 1;
+  padding: 30rpx;
+}
+
+.case-card {
+  background-color: #fff;
+  border-radius: 12rpx;
+  padding: 30rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+}
+
+.case-type {
+  display: inline-block;
+  font-size: 24rpx;
+  padding: 8rpx 16rpx;
+  border-radius: 6rpx;
+  margin-bottom: 20rpx;
+  color: #fff;
+}
+
+.type-orange {
+  background-color: #f97316;
+}
+
+.type-red {
+  background-color: #ef4444;
+}
+
+.type-green {
+  background-color: #22c55e;
+}
+
+.type-purple {
+  background-color: #a855f7;
+}
+
+.case-name {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #1f2937;
+  margin-bottom: 30rpx;
+}
+
+.info-row {
+  display: flex;
+  margin-bottom: 20rpx;
+}
+
+.label {
+  font-size: 28rpx;
+  color: #6b7280;
+  width: 160rpx;
+}
+
+.value {
+  font-size: 28rpx;
+  color: #1f2937;
+  flex: 1;
+}
+
+.description-section {
+  margin-top: 30rpx;
+  padding-top: 30rpx;
+  border-top: 1rpx solid #e5e7eb;
+}
+
+.section-title {
+  display: block;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 16rpx;
+}
+
+.description {
+  display: block;
+  font-size: 28rpx;
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+.record-btn {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 60rpx;
+  padding: 20rpx 60rpx;
+  background-color: #3b82f6;
+  border-radius: 50rpx;
+  box-shadow: 0 4rpx 12rpx rgba(59, 130, 246, 0.4);
+}
+
+.record-btn text {
+  font-size: 28rpx;
+  color: #fff;
+}
+
+.empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  font-size: 28rpx;
+  color: #9ca3af;
+}

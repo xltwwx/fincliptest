@@ -1,0 +1,51 @@
+<view class="container" wx:if="{{caseDetail}}">
+  <!-- Header -->
+  <view class="header">
+    <view class="back-btn" catchtap="onBack">
+      <text>‹ 返回</text>
+    </view>
+    <view class="header-title">案例详情</view>
+    <view class="edit-btn" catchtap="onEdit">
+      <text>编辑</text>
+    </view>
+  </view>
+
+  <!-- Content -->
+  <scroll-view class="content" scroll-y>
+    <view class="case-card">
+      <view class="case-type {{caseDetail.type === '纠结' ? 'type-orange' : ''}} {{caseDetail.type === '拒贷' ? 'type-red' : ''}} {{caseDetail.type === '正常' ? 'type-green' : ''}} {{caseDetail.type === '逾期' ? 'type-purple' : ''}}">
+        {{caseDetail.type}}
+      </view>
+      <view class="case-name">{{caseDetail.caseName}}</view>
+      
+      <view class="info-row">
+        <text class="label">客户姓名：</text>
+        <text class="value">{{caseDetail.customerName}}</text>
+      </view>
+      
+      <view class="info-row">
+        <text class="label">日期：</text>
+        <text class="value">{{caseDetail.date}}</text>
+      </view>
+      
+      <view class="info-row">
+        <text class="label">状态：</text>
+        <text class="value">{{caseDetail.status}}</text>
+      </view>
+      
+      <view class="description-section">
+        <text class="section-title">案例描述</text>
+        <text class="description">{{caseDetail.description}}</text>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- Record Button -->
+  <view class="record-btn" catchtap="onRecord">
+    <text>🎤 录音</text>
+  </view>
+</view>
+
+<view class="empty" wx:else>
+  <text>未找到案例信息</text>
+</view>
