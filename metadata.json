@@ -1,0 +1,5 @@
+{
+  "name": "案例收集助手",
+  "description": "银行贷款案例收集与AI摘要助手，支持语音录入、文件导入及案例访谈纲要管理。",
+  "requestFramePermissions": ["microphone"]
+}
