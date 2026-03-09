@@ -1,0 +1,43 @@
+<view class="container">
+  <view class="form-card">
+    <view class="form-item">
+      <view class="form-label">案例标题</view>
+      <input 
+        class="form-input" 
+        name="title" 
+        value="{{formData.title}}" 
+        placeholder="请输入案例标题"
+        placeholder-class="input-placeholder"
+      />
+    </view>
+
+    <view class="form-item">
+      <view class="form-label">案例分类</view>
+      <picker 
+        class="picker" 
+        range="{{categories}}" 
+        value="{{categoryIndex}}" 
+        bindchange="onCategoryChange"
+      >
+        <view class="picker-value">{{categories[categoryIndex] || '请选择分类'}}</view>
+      </picker>
+    </view>
+
+    <view class="form-item">
+      <view class="form-label">案例内容</view>
+      <textarea 
+        class="form-textarea" 
+        name="content" 
+        value="{{formData.content}}" 
+        placeholder="请输入案例详细内容" 
+        maxlength="-1"
+        placeholder-class="input-placeholder"
+      />
+    </view>
+
+    <view class="form-actions">
+      <button class="btn-submit" formType="submit">保存案例</button>
+      <button class="btn-cancel" bindtap="onCancel">取消</button>
+    </view>
+  </view>
+</view>
