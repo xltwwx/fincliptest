@@ -1,11 +1,13 @@
+<!--pages/index/index.wxml-->
 <view class="container">
   <!-- Header -->
   <view class="header">
-    <view class="title">案例收集助手</view>
+    <text class="title">案例收集助手</text>
     <view class="search-box">
-      <input
-        class="search-input"
-        placeholder="搜索客户姓名或案例名称"
+      <text class="search-icon">🔍</text>
+      <input 
+        class="search-input" 
+        placeholder="搜索客户姓名或案例名称" 
         value="{{searchQuery}}"
         bindinput="onSearchInput"
       />
@@ -13,22 +15,41 @@
   </view>
 
   <!-- List -->
-  <scroll-view class="case-list" scroll-y>
-    <view wx:for="{{filteredCases}}" wx:key="id" class="case-card" catchtap="onCaseTap" data-id="{{item.id}}">
-      <view class="case-type {{item.type === '纠结' ? 'type-orange' : ''}} {{item.type === '拒贷' ? 'type-red' : ''}} {{item.type === '正常' ? 'type-green' : ''}} {{item.type === '逾期' ? 'type-purple' : ''}}">
-        {{item.type}}
+  <scroll-view class="case-list" scroll-y="true">
+    <view wx:if="{{filteredCases.length > 0}}">
+      <view 
+        wx:for="{{filteredCases}}" 
+        wx:key="id" 
+        class="case-card"
+        bindtap="onCaseTap"
+        data-id="{{item.id}}"
+      >
+        <view class="case-type {{item.type}}">{{item.type}}</view>
+        <text class="case-name">{{item.name}}</text>
+        <view class="case-info">
+          <view class="info-item">
+            <text class="info-icon">👤</text>
+            <text class="info-text">{{item.customerName}}</text>
+          </view>
+          <view class="info-item">
+            <text class="info-icon">⏱️</text>
+            <text class="info-text">{{item.duration}}</text>
+          </view>
+          <view class="info-item">
+            <text class="info-icon">📅</text>
+            <text class="info-text">{{item.date}}</text>
+          </view>
+        </view>
       </view>
-      <view class="case-info">
-        <view class="case-name">{{item.caseName}}</view>
-        <view class="case-customer">{{item.customerName}}</view>
-        <view class="case-date">{{item.date}}</view>
-      </view>
-      <view class="case-status">{{item.status}}</view>
+    </view>
+    
+    <view wx:else class="empty-state">
+      <text class="empty-text">暂无相关案例</text>
     </view>
   </scroll-view>
 
-  <!-- Add Button -->
-  <view class="add-btn" catchtap="onAddCase">
-    <text>+</text>
+  <!-- Floating Action Button -->
+  <view class="fab" bindtap="onAddTap">
+    <text class="fab-icon">+</text>
   </view>
 </view>

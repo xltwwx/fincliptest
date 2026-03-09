@@ -1,119 +1,149 @@
+/* pages/index/index.wxss */
 .container {
   display: flex;
   flex-direction: column;
   height: 100vh;
   background-color: #f3f4f6;
+  overflow: hidden;
 }
 
 .header {
-  padding: 20rpx;
-  background-color: #fff;
-  border-bottom: 1rpx solid #e5e7eb;
+  background-color: #ffffff;
+  padding: 48rpx 32rpx 32rpx;
+  border-radius: 0 0 32rpx 32rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+  flex-shrink: 0;
 }
 
 .title {
-  font-size: 36rpx;
+  font-size: 40rpx;
   font-weight: bold;
   color: #1f2937;
-  margin-bottom: 20rpx;
+  margin-bottom: 24rpx;
+  display: block;
 }
 
 .search-box {
-  background-color: #f9fafb;
-  border-radius: 8rpx;
-  padding: 16rpx;
+  position: relative;
+  background-color: #f3f4f6;
+  border-radius: 32rpx;
+  padding: 20rpx;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: 32rpx;
+  font-size: 32rpx;
 }
 
 .search-input {
-  font-size: 28rpx;
-  color: #374151;
+  width: 100%;
+  padding-left: 48rpx;
+  font-size: 26rpx;
+  background: transparent;
 }
 
 .case-list {
   flex: 1;
   padding: 20rpx;
+  box-sizing: border-box;
 }
 
 .case-card {
-  display: flex;
-  align-items: center;
-  background-color: #fff;
-  border-radius: 12rpx;
+  background-color: #ffffff;
+  border-radius: 32rpx;
   padding: 24rpx;
   margin-bottom: 20rpx;
-  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.03);
+  border: 1rpx solid #f3f4f6;
+  position: relative;
 }
 
 .case-type {
-  font-size: 24rpx;
-  padding: 8rpx 16rpx;
-  border-radius: 6rpx;
-  margin-right: 20rpx;
-  color: #fff;
+  position: absolute;
+  top: 24rpx;
+  right: 24rpx;
+  padding: 6rpx 12rpx;
+  border-radius: 12rpx;
+  font-size: 20rpx;
+  font-weight: bold;
 }
 
-.type-orange {
-  background-color: #f97316;
+.case-type.正常 {
+  background-color: #dcfce7;
+  color: #16a34a;
 }
 
-.type-red {
-  background-color: #ef4444;
+.case-type.纠结 {
+  background-color: #ffedd5;
+  color: #ea580c;
 }
 
-.type-green {
-  background-color: #22c55e;
+.case-type.拒贷 {
+  background-color: #fee2e2;
+  color: #dc2626;
 }
 
-.type-purple {
-  background-color: #a855f7;
-}
-
-.case-info {
-  flex: 1;
+.case-type.逾期 {
+  background-color: #f3e8ff;
+  color: #9333ea;
 }
 
 .case-name {
-  font-size: 30rpx;
-  font-weight: 600;
+  font-size: 32rpx;
+  font-weight: bold;
   color: #1f2937;
-  margin-bottom: 8rpx;
+  margin-bottom: 16rpx;
+  padding-right: 80rpx;
+  display: block;
 }
 
-.case-customer {
-  font-size: 26rpx;
-  color: #6b7280;
-  margin-bottom: 4rpx;
+.case-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
 }
 
-.case-date {
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
   font-size: 24rpx;
+  color: #6b7280;
+  width: 50%;
+}
+
+.info-icon {
+  font-size: 24rpx;
+}
+
+.empty-state {
+  text-align: center;
+  padding-top: 160rpx;
   color: #9ca3af;
+  font-size: 28rpx;
 }
 
-.case-status {
-  font-size: 24rpx;
-  color: #6b7280;
-  padding: 4rpx 12rpx;
-  background-color: #f3f4f6;
-  border-radius: 4rpx;
-}
-
-.add-btn {
+.fab {
   position: fixed;
-  right: 40rpx;
-  bottom: 80rpx;
-  width: 100rpx;
-  height: 100rpx;
-  background-color: #3b82f6;
+  bottom: 64rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 128rpx;
+  height: 128rpx;
+  background-color: #2563eb;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4rpx 12rpx rgba(59, 130, 246, 0.4);
+  box-shadow: 0 8rpx 32rpx rgba(37, 99, 235, 0.3);
+  z-index: 100;
 }
 
-.add-btn text {
-  font-size: 60rpx;
-  color: #fff;
-  line-height: 1;
+.fab-icon {
+  color: #ffffff;
+  font-size: 56rpx;
+  font-weight: 300;
 }

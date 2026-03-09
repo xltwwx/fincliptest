@@ -1,51 +1,76 @@
-<view class="container" wx:if="{{caseDetail}}">
+<!--pages/detail/detail.wxml-->
+<view class="container">
   <!-- Header -->
   <view class="header">
-    <view class="back-btn" catchtap="onBack">
-      <text>‹ 返回</text>
+    <view class="back-btn" bindtap="onBack">
+      <text class="back-icon">←</text>
     </view>
-    <view class="header-title">案例详情</view>
-    <view class="edit-btn" catchtap="onEdit">
-      <text>编辑</text>
-    </view>
+    <text class="title">{{formData.name || '新开案例'}}</text>
+    <view class="placeholder"></view>
   </view>
 
-  <!-- Content -->
-  <scroll-view class="content" scroll-y>
-    <view class="case-card">
-      <view class="case-type {{caseDetail.type === '纠结' ? 'type-orange' : ''}} {{caseDetail.type === '拒贷' ? 'type-red' : ''}} {{caseDetail.type === '正常' ? 'type-green' : ''}} {{caseDetail.type === '逾期' ? 'type-purple' : ''}}">
-        {{caseDetail.type}}
+  <!-- Scrollable Content -->
+  <scroll-view class="content" scroll-y="true">
+    <!-- Basic Info -->
+    <view class="card basic-info">
+      <view class="form-item">
+        <text class="label">客户号</text>
+        <input 
+          class="input" 
+          placeholder="请输入客户号" 
+          value="{{formData.customerId}}"
+          bindinput="onCustomerIdInput"
+        />
       </view>
-      <view class="case-name">{{caseDetail.caseName}}</view>
-      
-      <view class="info-row">
-        <text class="label">客户姓名：</text>
-        <text class="value">{{caseDetail.customerName}}</text>
+      <view class="form-item">
+        <text class="label">业务类型</text>
+        <picker 
+          mode="selector" 
+          range="{{businessTypes}}" 
+          value="{{businessTypeIndex}}"
+          bindchange="onBusinessTypeChange"
+        >
+          <view class="picker-value">{{businessTypes[businessTypeIndex]}}</view>
+        </picker>
       </view>
-      
-      <view class="info-row">
-        <text class="label">日期：</text>
-        <text class="value">{{caseDetail.date}}</text>
+    </view>
+
+    <!-- Modules -->
+    <view class="modules-list">
+      <view 
+        wx:for="{{modules}}" 
+        wx:key="id" 
+        class="module-card"
+        bindtap="onModuleTap"
+        data-module="{{item}}"
+      >
+        <view class="module-left">
+          <view class="status-dot {{formData.recordings[item.id] ? 'active' : ''}}"></view>
+          <text class="module-title">{{item.title}}</text>
+        </view>
+        <view class="module-action {{formData.recordings[item.id] ? 'has-recording' : ''}}">
+          <text wx:if="{{formData.recordings[item.id]}}">▶</text>
+          <text wx:else>🎤</text>
+        </view>
       </view>
-      
-      <view class="info-row">
-        <text class="label">状态：</text>
-        <text class="value">{{caseDetail.status}}</text>
-      </view>
-      
-      <view class="description-section">
-        <text class="section-title">案例描述</text>
-        <text class="description">{{caseDetail.description}}</text>
-      </view>
+    </view>
+
+    <!-- Submit Button -->
+    <view class="submit-section">
+      <button class="submit-btn" bindtap="onSubmitTap">确认提交</button>
     </view>
   </scroll-view>
 
-  <!-- Record Button -->
-  <view class="record-btn" catchtap="onRecord">
-    <text>🎤 录音</text>
+  <!-- Confirm Modal -->
+  <view wx:if="{{showConfirm}}" class="modal-overlay" bindtap="hideConfirm">
+    <view class="modal-content" catchtap="true">
+      <view class="modal-icon">✓</view>
+      <text class="modal-title">确认提交</text>
+      <text class="modal-desc">是否确认提交当前案例及所有模块的录音文件？</text>
+      <view class="modal-buttons">
+        <button class="btn-cancel" bindtap="hideConfirm">取消</button>
+        <button class="btn-confirm" bindtap="confirmSubmit">确认提交</button>
+      </view>
+    </view>
   </view>
-</view>
-
-<view class="empty" wx:else>
-  <text>未找到案例信息</text>
 </view>
