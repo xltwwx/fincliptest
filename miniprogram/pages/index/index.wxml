@@ -1,0 +1,34 @@
+<view class="container">
+  <!-- Header -->
+  <view class="header">
+    <view class="title">案例收集助手</view>
+    <view class="search-box">
+      <input
+        class="search-input"
+        placeholder="搜索客户姓名或案例名称"
+        value="{{searchQuery}}"
+        bindinput="onSearchInput"
+      />
+    </view>
+  </view>
+
+  <!-- List -->
+  <scroll-view class="case-list" scroll-y>
+    <view wx:for="{{filteredCases}}" wx:key="id" class="case-card" catchtap="onCaseTap" data-id="{{item.id}}">
+      <view class="case-type {{item.type === '纠结' ? 'type-orange' : ''}} {{item.type === '拒贷' ? 'type-red' : ''}} {{item.type === '正常' ? 'type-green' : ''}} {{item.type === '逾期' ? 'type-purple' : ''}}">
+        {{item.type}}
+      </view>
+      <view class="case-info">
+        <view class="case-name">{{item.caseName}}</view>
+        <view class="case-customer">{{item.customerName}}</view>
+        <view class="case-date">{{item.date}}</view>
+      </view>
+      <view class="case-status">{{item.status}}</view>
+    </view>
+  </scroll-view>
+
+  <!-- Add Button -->
+  <view class="add-btn" catchtap="onAddCase">
+    <text>+</text>
+  </view>
+</view>
