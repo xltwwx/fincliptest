@@ -1,0 +1,58 @@
+<!--pages/recording/recording.wxml-->
+<view class="container">
+  <!-- Header -->
+  <view class="header">
+    <view class="close-btn" bindtap="onClose">
+      <text class="close-icon">✕</text>
+    </view>
+    <text class="title">{{title}}</text>
+    <view class="complete-btn" bindtap="onComplete">
+      <text class="complete-text">完成</text>
+    </view>
+  </view>
+
+  <!-- Content -->
+  <scroll-view class="content" scroll-y="true">
+    <!-- Hint -->
+    <view class="hint-box">
+      <view class="hint-header">
+        <text class="hint-icon">ℹ️</text>
+        <text class="hint-title">录音模板提示</text>
+      </view>
+      <text class="hint-text">{{hint}}</text>
+    </view>
+
+    <!-- Timer/Status -->
+    <view class="timer-section">
+      <text class="timer">{{formattedTime}}</text>
+      <view class="status-badge">
+        <text class="status-text">{{statusText}}</text>
+      </view>
+    </view>
+
+    <!-- Controls -->
+    <view class="controls-section">
+      <!-- Has recording, not recording -->
+      <view wx:if="{{hasRecording && !isRecording}}" class="controls-row">
+        <view class="control-btn delete-btn" bindtap="onDelete">
+          <text class="btn-icon">🗑️</text>
+        </view>
+        <view class="control-btn play-btn" bindtap="onPlay">
+          <text class="btn-icon-large">▶</text>
+        </view>
+        <view class="control-btn placeholder"></view>
+      </view>
+
+      <!-- Recording or no recording -->
+      <view wx:else class="main-record-btn" bindtap="onRecordTap">
+        <view class="record-btn-inner {{isRecording ? 'recording' : ''}}">
+          <text wx:if="{{!isRecording}}" class="mic-icon">🎤</text>
+          <text wx:else class="stop-icon">⬛</text>
+        </view>
+        <view wx:if="{{isRecording}}" class="pulse-ring"></view>
+      </view>
+
+      <text class="control-hint">{{controlHint}}</text>
+    </view>
+  </scroll-view>
+</view>

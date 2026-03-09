@@ -1,200 +1,127 @@
+// pages/detail/detail.js
+const app = getApp();
+
+const MODULES = [
+  { id: 'intro', title: '拟交流案例介绍', hint: '请录入案例标题、时间、客户姓名、客户类型、经营行业及贷款金额等基本信息。' },
+  { id: 'customer', title: '客户基本信息与社区化', hint: '请录入客户的家庭情况、经营情况以及资产负债等社区化信息。' },
+  { id: 'scheme', title: '贷款方案', hint: '请录入贷款利率、期限、担保方式及还款方式等具体方案内容。' },
+  { id: 'investigation', title: '调查过程', hint: '请录入非现场调查和现场调查的具体过程与发现。' },
+  { id: 'focus', title: '决策争议焦点', hint: '请录入该案例在决策过程中的核心争议点及模型分析结果。' },
+];
+
 Page({
   data: {
-    caseDetail: null,
-    isRecording: false,
-    hasAudio: false,
-    isPlaying: false,
-    audioPath: ''
+    formData: {
+      id: '',
+      name: '',
+      customerName: '',
+      customerId: '',
+      businessType: '正常',
+      duration: '00:00',
+      date: '',
+      type: '正常',
+      intro: { title: '', time: '', customerName: '', customerType: '', industry: '', amount: '' },
+      customerInfo: { family: '', business: '', assetsLiabilities: '' },
+      loanScheme: { rate: '', term: '', guarantee: '', repayment: '' },
+      investigation: { offSite: '', onSite: '' },
+      decisionFocus: '',
+      recordings: {}
+    },
+    modules: MODULES,
+    businessTypes: ['正常', '纠结', '拒贷', '逾期'],
+    businessTypeIndex: 0,
+    showConfirm: false,
+    isNewCase: false
   },
-  
+
   onLoad(options) {
-    const id = parseInt(options.id)
-    this.loadCaseDetail(id)
-  },
-
-  loadCaseDetail(id) {
-    try {
-      const cases = wx.getStorageSync('cases')
-      const casesList = cases ? JSON.parse(cases) : []
-      const caseData = casesList.find(c => c.id === id)
-
-      if (caseData) {
-        this.setData({
-          caseDetail: caseData
-        })
-      } else {
-        const mockData = {
-          1: { id: 1, title: '房贷审批案例', category: '正常', date: '2024-01-15', content: '客户张三申请房贷，资料齐全，顺利审批通过。' },
-          2: { id: 2, title: '车贷被拒案例', category: '拒贷', date: '2024-01-16', content: '客户李四因信用记录不良，车贷申请被拒。' },
-          3: { id: 3, title: '贷款选择困难', category: '纠结', date: '2024-01-17', content: '客户王五在多家银行贷款方案之间犹豫不决。' },
-          4: { id: 4, title: '信用卡逾期案例', category: '逾期', date: '2024-01-18', content: '客户赵六信用卡逾期，经协商已制定还款计划。' }
-        }
-        this.setData({
-          caseDetail: mockData[id] || null
-        })
-      }
-    } catch (e) {
-      console.error('加载案例失败', e)
-    }
-  },
-
-  onBack() {
-    wx.navigateBack()
-  },
-
-  onEdit() {
-    if (this.data.caseDetail) {
-      wx.navigateTo({
-        url: `/pages/edit/edit?id=${this.data.caseDetail.id}`
-      })
-    }
-  },
-
-  onRecord() {
-    if (this.data.isRecording) {
-      this.stopRecord()
-    } else {
-      this.startRecord()
-    }
-  },
-
-  startRecord() {
-    const recorderManager = wx.getRecorderManager()
+    const id = options.id;
     
-    recorderManager.onStart(() => {
-      console.log('录音开始')
-      this.setData({ isRecording: true })
-    })
-
-    recorderManager.onStop((res) => {
-      console.log('录音结束', res)
+    if (id === 'new') {
+      // 新案例
+      const today = new Date().toISOString().split('T')[0];
       this.setData({
-        isRecording: false,
-        hasAudio: true,
-        audioPath: res.tempFilePath
-      })
-      wx.showToast({ title: '录音完成', icon: 'success' })
-    })
-
-    recorderManager.onError((err) => {
-      console.error('录音错误', err)
-      this.setData({ isRecording: false })
-      wx.showToast({ title: '录音失败', icon: 'none' })
-    })
-
-    const systemInfo = wx.getSystemInfoSync()
-    if (systemInfo.platform === 'devtools') {
-      wx.showToast({ title: '模拟器中模拟录音', icon: 'none' })
-      this.setData({ isRecording: true })
-      setTimeout(() => {
-        this.setData({
-          isRecording: false,
-          hasAudio: true,
-          audioPath: 'simulated_audio.mp3'
-        })
-      }, 2000)
-      return
-    }
-
-    wx.authorize({
-      scope: 'scope.record',
-      success: () => {
-        recorderManager.start({
-          duration: 60000,
-          sampleRate: 16000,
-          numberOfChannels: 1,
-          encodeBitRate: 48000,
-          format: 'mp3'
-        })
-      },
-      fail: () => {
-        wx.showModal({
-          title: '提示',
-          content: '需要录音权限，请在设置中开启',
-          confirmText: '去设置',
-          success: (res) => {
-            if (res.confirm) wx.openSetting()
-          }
-        })
-      }
-    })
-  },
-
-  stopRecord() {
-    const recorderManager = wx.getRecorderManager()
-    recorderManager.stop()
-  },
-
-  onPlayAudio() {
-    if (!this.data.audioPath) {
-      wx.showToast({ title: '暂无录音', icon: 'none' })
-      return
-    }
-
-    if (this.data.isPlaying) {
-      this.stopAudio()
+        'formData.id': Math.random().toString(36).substr(2, 9),
+        'formData.date': today,
+        isNewCase: true
+      });
     } else {
-      this.playAudio()
-    }
-  },
-
-  playAudio() {
-    const innerAudioContext = wx.createInnerAudioContext()
-    innerAudioContext.src = this.data.audioPath
-    innerAudioContext.autoplay = true
-
-    innerAudioContext.onPlay(() => {
-      this.setData({ isPlaying: true })
-    })
-
-    innerAudioContext.onEnded(() => {
-      this.setData({ isPlaying: false })
-    })
-
-    innerAudioContext.onError((res) => {
-      console.error('播放错误', res)
-      this.setData({ isPlaying: false })
-      wx.showToast({ title: '播放失败', icon: 'none' })
-    })
-
-    innerAudioContext.play()
-    this.innerAudioContext = innerAudioContext
-  },
-
-  stopAudio() {
-    if (this.innerAudioContext) {
-      this.innerAudioContext.stop()
-      this.setData({ isPlaying: false })
-    }
-  },
-
-  onDelete() {
-    if (!this.data.caseDetail) return
-
-    wx.showModal({
-      title: '确认删除',
-      content: '确定要删除这个案例吗？',
-      success: (res) => {
-        if (res.confirm) {
-          try {
-            const cases = wx.getStorageSync('cases')
-            let casesList = cases ? JSON.parse(cases) : []
-            casesList = casesList.filter(c => c.id !== this.data.caseDetail.id)
-            wx.setStorageSync('cases', JSON.stringify(casesList))
-            
-            wx.showToast({ title: '删除成功', icon: 'success' })
-            setTimeout(() => wx.navigateBack(), 1500)
-          } catch (e) {
-            wx.showToast({ title: '删除失败', icon: 'none' })
-          }
-        }
+      // 编辑已有案例
+      const caseItem = app.globalData.cases.find(c => c.id === id);
+      if (caseItem) {
+        const businessTypeIndex = this.data.businessTypes.indexOf(caseItem.type || caseItem.businessType || '正常');
+        this.setData({
+          formData: caseItem,
+          businessTypeIndex: businessTypeIndex >= 0 ? businessTypeIndex : 0
+        });
       }
-    })
+    }
   },
 
-  onUnload() {
-    if (this.innerAudioContext) {
-      this.innerAudioContext.destroy()
+  onCustomerIdInput(e) {
+    this.setData({
+      'formData.customerId': e.detail.value
+    });
+  },
+
+  onBusinessTypeChange(e) {
+    const index = e.detail.value;
+    const type = this.data.businessTypes[index];
+    this.setData({
+      businessTypeIndex: index,
+      'formData.businessType': type,
+      'formData.type': type
+    });
+  },
+
+  onModuleTap(e) {
+    const module = e.currentTarget.dataset.module;
+    wx.navigateTo({
+      url: `/pages/recording/recording?moduleId=${module.id}&title=${encodeURIComponent(module.title)}&hint=${encodeURIComponent(module.hint)}`
+    });
+  },
+
+  onSubmitTap() {
+    this.setData({ showConfirm: true });
+  },
+
+  hideConfirm() {
+    this.setData({ showConfirm: false });
+  },
+
+  confirmSubmit() {
+    const formData = this.data.formData;
+    const name = formData.customerId ? `案例-${formData.customerId}` : '未命名案例';
+    formData.name = name;
+
+    // 保存数据
+    const cases = app.globalData.cases || [];
+    const existingIndex = cases.findIndex(c => c.id === formData.id);
+
+    if (existingIndex >= 0) {
+      // 更新已有案例
+      cases[existingIndex] = formData;
+    } else {
+      // 添加新案例
+      cases.unshift(formData);
+    }
+
+    app.globalData.cases = cases;
+    wx.setStorageSync('cases', JSON.stringify(cases));
+
+    this.hideConfirm();
+    wx.navigateBack();
+  },
+
+  onShow() {
+    // 从录音页面返回时，检查是否有新的录音数据
+    const recordingData = wx.getStorageSync('tempRecording');
+    if (recordingData && recordingData.moduleId) {
+      const key = `formData.recordings.${recordingData.moduleId}`;
+      this.setData({
+        [key]: recordingData.content
+      });
+      wx.removeStorageSync('tempRecording');
     }
   }
 })
