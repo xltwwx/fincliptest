@@ -66,19 +66,19 @@ export const CaseDetail: React.FC<CaseDetailProps> = ({ caseData, onBack, onSave
   return (
     <div className="h-full flex flex-col bg-gray-50 overflow-hidden">
       {/* Header */}
-      <div className="bg-white px-4 py-4 flex items-center gap-4 flex-none border-b border-gray-100">
-        <button onClick={onBack} className="text-gray-600">
-          <ArrowLeft size={24} />
+      <div className="bg-white px-4 sm:px-6 py-4 sm:py-6 flex items-center gap-3 sm:gap-4 flex-none border-b border-gray-100">
+        <button onClick={onBack} className="text-gray-600 p-1 -ml-2">
+          <ArrowLeft size={22} className="sm:w-6 sm:h-6" />
         </button>
-        <h1 className="text-lg font-bold flex-1 truncate">
+        <h1 className="text-base sm:text-lg font-bold flex-1 truncate">
           {formData.name || '新开案例'}
         </h1>
       </div>
 
       {/* Scrollable Content */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 sm:space-y-4">
         {/* Basic Info */}
-        <div className="bg-white rounded-2xl p-5 shadow-sm space-y-4">
+        <div className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-5 shadow-sm space-y-3 sm:space-y-4">
           <div>
             <label className="text-xs font-bold text-gray-400 mb-2 block uppercase tracking-wider">客户号</label>
             <input 
@@ -105,35 +105,35 @@ export const CaseDetail: React.FC<CaseDetailProps> = ({ caseData, onBack, onSave
         </div>
 
         {/* Modules */}
-        <div className="space-y-3">
+        <div className="space-y-2 sm:space-y-3">
           {MODULES.map((module) => (
             <div 
               key={module.id}
-              className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 flex items-center justify-between"
+              className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-5 shadow-sm border border-gray-100 flex items-center justify-between"
             >
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 sm:gap-3">
                 <div className={`w-2 h-2 rounded-full ${formData.recordings[module.id] ? 'bg-green-500' : 'bg-gray-200'}`} />
-                <h3 className="font-bold text-gray-800">{module.title}</h3>
+                <h3 className="font-bold text-sm sm:text-base text-gray-800">{module.title}</h3>
               </div>
               <button 
                 onClick={() => setActiveRecording(module)}
-                className={`p-3 rounded-xl transition-colors ${
+                className={`p-2.5 sm:p-3 rounded-xl transition-colors ${
                   formData.recordings[module.id] 
                     ? 'bg-green-50 text-green-600' 
                     : 'bg-blue-50 text-blue-600'
                 }`}
               >
-                {formData.recordings[module.id] ? <Volume2 size={20} /> : <Mic size={20} />}
+                {formData.recordings[module.id] ? <Volume2 size={18} className="sm:w-5 sm:h-5" /> : <Mic size={18} className="sm:w-5 sm:h-5" />}
               </button>
             </div>
           ))}
         </div>
 
         {/* Submit Button in the middle */}
-        <div className="flex justify-center pt-8 pb-12">
+        <div className="flex justify-center pt-6 sm:pt-8 pb-10 sm:pb-12">
           <button 
             onClick={() => setShowConfirm(true)}
-            className="px-12 py-3 bg-blue-600 text-white rounded-xl font-bold shadow-lg shadow-blue-200 active:scale-95 transition-transform"
+            className="px-10 sm:px-12 py-3 bg-blue-600 text-white rounded-xl font-bold shadow-lg shadow-blue-200 active:scale-95 transition-transform text-sm sm:text-base"
           >
             确认提交
           </button>
