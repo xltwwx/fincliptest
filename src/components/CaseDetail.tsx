@@ -54,6 +54,15 @@ export const CaseDetail: React.FC<CaseDetailProps> = ({ caseData, onBack, onSave
     });
   };
 
+  const handleSaveCustomerInfo = (customerId: string, businessType: string) => {
+    setFormData(prev => ({
+      ...prev,
+      customerId,
+      businessType,
+      type: businessType as CaseType
+    }));
+  };
+
   return (
     <div className="h-full flex flex-col bg-gray-50 overflow-hidden">
       {/* Header */}
@@ -138,7 +147,10 @@ export const CaseDetail: React.FC<CaseDetailProps> = ({ caseData, onBack, onSave
             label={activeRecording.title}
             hint={activeRecording.hint}
             initialValue={formData.recordings[activeRecording.id]}
+            customerId={formData.customerId}
+            businessType={formData.businessType}
             onSave={(content) => handleSaveRecording(activeRecording.id, content)}
+            onCustomerInfoSave={handleSaveCustomerInfo}
             onClose={() => setActiveRecording(null)}
           />
         )}
