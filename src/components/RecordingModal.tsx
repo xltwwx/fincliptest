@@ -58,17 +58,21 @@ export const RecordingModal: React.FC<RecordingModalProps> = ({
   const [showEditForm, setShowEditForm] = useState(false);
   const [customerId, setCustomerId] = useState(initialCustomerId || '');
   const [businessType, setBusinessType] = useState(initialBusinessType || '正常');
+  const [hasExistingRecording, setHasExistingRecording] = useState(!!initialValue);
 
   // Reset form when modal opens with new initial values
   useEffect(() => {
     if (initialValue) {
       setRecordingData(initialValue);
+      setHasExistingRecording(true);
     } else {
       setRecordingData(null);
+      setHasExistingRecording(false);
     }
     setCustomerId(initialCustomerId || '');
     setBusinessType(initialBusinessType || '正常');
     setShowEditForm(false);
+    setIsRecording(false);
   }, [initialValue, initialCustomerId, initialBusinessType]);
 
   // Lock body scroll on mount
@@ -93,6 +97,14 @@ export const RecordingModal: React.FC<RecordingModalProps> = ({
 
   const handleDelete = () => {
     setRecordingData(null);
+    setHasExistingRecording(false);
+  };
+
+  const handleReRecord = () => {
+    setRecordingData(null);
+    setHasExistingRecording(false);
+    setShowEditForm(false);
+    setIsRecording(false);
   };
 
   const handleConfirm = () => {
@@ -111,6 +123,7 @@ export const RecordingModal: React.FC<RecordingModalProps> = ({
   };
 
   const hasRecording = !!recordingData && !isRecording;
+  const canShowEdit = hasRecording && hasExistingRecording;
 
   return (
     <motion.div 
@@ -124,7 +137,7 @@ export const RecordingModal: React.FC<RecordingModalProps> = ({
         <button onClick={onClose} className="text-gray-500 p-2 -ml-2">
           <X size={24} />
         </button>
-        <h2 className="text-base sm:text-lg font-bold truncate px-2">{label}</h2>
+        <h2 className="text-base sm:text-lg font-bold truncate px-2 flex-1 text-center">{label}</h2>
         <button 
           onClick={handleConfirm}
           disabled={!recordingData}
@@ -159,7 +172,7 @@ export const RecordingModal: React.FC<RecordingModalProps> = ({
           </div>
 
           {/* Edit Form for existing recording */}
-          {showEditForm && hasRecording && (
+          {showEditForm && canShowEdit && (
             <div className="w-full bg-gray-50 rounded-xl p-4 mb-4 sm:mb-6 space-y-3">
               <div className="flex items-center justify-between mb-2">
                 <h3 className="font-bold text-sm text-gray-700">编辑信息</h3>
@@ -202,24 +215,26 @@ export const RecordingModal: React.FC<RecordingModalProps> = ({
           {/* Controls */}
           <div className="w-full pb-8 sm:pb-12 flex flex-col items-center gap-4 sm:gap-6 mt-auto">
             {hasRecording ? (
-              <div className="flex items-center gap-6 sm:gap-10">
+              <div className="flex items-center gap-4 sm:gap-8">
                 <button 
-                  onClick={handleDelete}
-                  className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-red-50 text-red-500 flex items-center justify-center hover:bg-red-100 transition-colors"
-                  title="删除"
+                  onClick={handleReRecord}
+                  className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-orange-50 text-orange-500 flex items-center justify-center hover:bg-orange-100 transition-colors"
+                  title="重新录制"
                 >
-                  <Trash2 size={18} className="sm:w-5 sm:h-5" />
+                  <Mic size={20} className="sm:w-6 sm:h-6" />
                 </button>
                 <button className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-blue-600 text-white flex items-center justify-center shadow-xl shadow-blue-200 active:scale-95 transition-transform">
                   <Play size={28} className="sm:w-8 sm:h-8 ml-0.5" fill="currentColor" />
                 </button>
-                <button 
-                  onClick={() => setShowEditForm(!showEditForm)}
-                  className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gray-100 text-gray-600 flex items-center justify-center hover:bg-gray-200 transition-colors"
-                  title="编辑"
-                >
-                  <Edit2 size={18} className="sm:w-5 sm:h-5" />
-                </button>
+                {canShowEdit && (
+                  <button 
+                    onClick={() => setShowEditForm(!showEditForm)}
+                    className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-gray-100 text-gray-600 flex items-center justify-center hover:bg-gray-200 transition-colors"
+                    title="编辑"
+                  >
+                    <Edit2 size={20} className="sm:w-6 sm:h-6" />
+                  </button>
+                )}
               </div>
             ) : (
               <button 
@@ -244,7 +259,7 @@ export const RecordingModal: React.FC<RecordingModalProps> = ({
             )}
             
             <p className="text-xs sm:text-sm text-gray-400 font-medium text-center px-4">
-              {isRecording ? '点击红色按钮停止录音' : recordingData ? '您可以试听、编辑或重新录制' : '点击蓝色按钮开始录音'}
+              {isRecording ? '点击红色按钮停止录音' : recordingData ? (hasExistingRecording ? '您可以试听、重新录制或编辑客户信息' : '您可以试听或重新录制') : '点击蓝色按钮开始录音'}
             </p>
           </div>
         </div>
