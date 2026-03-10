@@ -89,6 +89,10 @@ export default function App() {
     });
   };
 
+  const handleDelete = (caseId: string) => {
+    setCases(prev => prev.filter(c => c.id !== caseId));
+  };
+
   return (
     <div className="max-w-md mx-auto bg-white shadow-2xl h-screen relative overflow-hidden font-sans flex flex-col">
       {view === 'list' ? (
@@ -102,6 +106,7 @@ export default function App() {
           caseData={selectedCase} 
           onBack={() => setView('list')} 
           onSave={handleSave}
+          onDelete={handleDelete}
         />
       )}
     </div>

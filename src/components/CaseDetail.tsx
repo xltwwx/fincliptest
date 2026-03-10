@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowLeft, CheckCircle2, Mic, Volume2 } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, Mic, Volume2, Edit2, Trash2 } from 'lucide-react';
 import { CaseRecord, CaseType } from '../types';
 import { RecordingModal } from './RecordingModal';
 import { motion, AnimatePresence } from 'motion/react';
@@ -8,6 +8,7 @@ interface CaseDetailProps {
   caseData?: CaseRecord;
   onBack: () => void;
   onSave: (updatedCase: CaseRecord) => void;
+  onDelete?: (caseId: string) => void;
 }
 
 const MODULES = [
@@ -18,7 +19,7 @@ const MODULES = [
   { id: 'focus', title: '决策争议焦点', hint: '请录入该案例在决策过程中的核心争议点及模型分析结果。' },
 ];
 
-export const CaseDetail: React.FC<CaseDetailProps> = ({ caseData, onBack, onSave }) => {
+export const CaseDetail: React.FC<CaseDetailProps> = ({ caseData, onBack, onSave, onDelete }) => {
   const [formData, setFormData] = useState<CaseRecord>(caseData || {
     id: Math.random().toString(36).substr(2, 9),
     name: '',
@@ -38,6 +39,15 @@ export const CaseDetail: React.FC<CaseDetailProps> = ({ caseData, onBack, onSave
 
   const [activeRecording, setActiveRecording] = useState<{ id: string; title: string; hint: string } | null>(null);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+
+  // Enable edit mode if caseData exists (i.e., editing an existing case)
+  React.useEffect(() => {
+    if (caseData) {
+      setIsEditMode(true);
+    }
+  }, [caseData]);
 
   const handleSaveRecording = (moduleId: string, content: string) => {
     setFormData(prev => {
@@ -57,18 +67,27 @@ export const CaseDetail: React.FC<CaseDetailProps> = ({ caseData, onBack, onSave
   return (
     <div className="h-full flex flex-col bg-gray-50 overflow-hidden">
       {/* Header */}
-      <div className="bg-white px-4 py-4 flex items-center gap-4 flex-none border-b border-gray-100">
-        <button onClick={onBack} className="text-gray-600">
+      <div className="bg-white px-4 py-4 flex items-center gap-3 flex-none border-b border-gray-100">
+        <button onClick={onBack} className="text-gray-600 p-2 -ml-2">
           <ArrowLeft size={24} />
         </button>
         <h1 className="text-lg font-bold flex-1 truncate">
           {formData.name || '新开案例'}
         </h1>
+        {isEditMode && (
+          <button 
+            onClick={() => setShowDeleteConfirm(true)}
+            className="text-red-500 p-2 -mr-2"
+            title="删除案例"
+          >
+            <Trash2 size={20} />
+          </button>
+        )}
       </div>
 
       {/* Scrollable Content */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {/* Basic Info */}
+      <div className="flex-1 overflow-y-auto p-4 space-y-4 pb-24">
+        {/* Basic Info - Editable for existing cases */}
         <div className="bg-white rounded-2xl p-5 shadow-sm space-y-4">
           <div>
             <label className="text-xs font-bold text-gray-400 mb-2 block uppercase tracking-wider">客户号</label>
@@ -126,7 +145,7 @@ export const CaseDetail: React.FC<CaseDetailProps> = ({ caseData, onBack, onSave
             onClick={() => setShowConfirm(true)}
             className="px-12 py-3 bg-blue-600 text-white rounded-xl font-bold shadow-lg shadow-blue-200 active:scale-95 transition-transform"
           >
-            确认提交
+            {isEditMode ? '确认修改' : '确认提交'}
           </button>
         </div>
       </div>
@@ -155,9 +174,11 @@ export const CaseDetail: React.FC<CaseDetailProps> = ({ caseData, onBack, onSave
             <div className="w-16 h-16 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
               <CheckCircle2 size={32} />
             </div>
-            <h2 className="text-xl font-bold mb-2">确认提交</h2>
+            <h2 className="text-xl font-bold mb-2">{isEditMode ? '确认修改' : '确认提交'}</h2>
             <p className="text-gray-500 text-sm mb-6">
-              是否确认提交当前案例及所有模块的录音文件？
+              {isEditMode 
+                ? '是否确认修改当前案例及所有模块的录音文件？' 
+                : '是否确认提交当前案例及所有模块的录音文件？'}
             </p>
             <div className="flex gap-3">
               <button 
@@ -176,7 +197,45 @@ export const CaseDetail: React.FC<CaseDetailProps> = ({ caseData, onBack, onSave
                 }}
                 className="flex-1 py-3 bg-blue-600 text-white rounded-xl font-medium"
               >
-                确认提交
+                {isEditMode ? '确认修改' : '确认提交'}
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      )}
+
+      {/* Delete Confirm Modal */}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 bg-black/50 z-[110] flex items-center justify-center p-6">
+          <motion.div 
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="bg-white rounded-3xl p-6 w-full max-w-sm text-center"
+          >
+            <div className="w-16 h-16 bg-red-50 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Trash2 size={32} />
+            </div>
+            <h2 className="text-xl font-bold mb-2">删除案例</h2>
+            <p className="text-gray-500 text-sm mb-6">
+              确定要删除此案例吗？此操作不可恢复。
+            </p>
+            <div className="flex gap-3">
+              <button 
+                onClick={() => setShowDeleteConfirm(false)}
+                className="flex-1 py-3 bg-gray-100 text-gray-600 rounded-xl font-medium"
+              >
+                取消
+              </button>
+              <button 
+                onClick={() => {
+                  if (onDelete && formData.id) {
+                    onDelete(formData.id);
+                  }
+                  onBack();
+                }}
+                className="flex-1 py-3 bg-red-600 text-white rounded-xl font-medium"
+              >
+                确认删除
               </button>
             </div>
           </motion.div>

@@ -43,6 +43,13 @@ const TimerDisplay: React.FC<{ isRecording: boolean }> = ({ isRecording }) => {
 export const RecordingModal: React.FC<RecordingModalProps> = ({ label, hint, initialValue, onSave, onClose }) => {
   const [isRecording, setIsRecording] = useState(false);
   const [recordingData, setRecordingData] = useState<string | null>(initialValue || null);
+  const [hasPlayed, setHasPlayed] = useState(false);
+
+  useEffect(() => {
+    // Reset recording data when initialValue changes
+    setRecordingData(initialValue || null);
+    setHasPlayed(false);
+  }, [initialValue]);
 
   useEffect(() => {
     // Lock body scroll on mount
@@ -67,6 +74,13 @@ export const RecordingModal: React.FC<RecordingModalProps> = ({ label, hint, ini
 
   const handleDelete = () => {
     setRecordingData(null);
+    setHasPlayed(false);
+  };
+
+  const handlePlay = () => {
+    // Simulate playing the recording
+    setHasPlayed(true);
+    // In a real implementation, this would play the audio
   };
 
   const handleConfirm = () => {
@@ -79,17 +93,17 @@ export const RecordingModal: React.FC<RecordingModalProps> = ({ label, hint, ini
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-white z-[100] flex flex-col max-w-md mx-auto shadow-2xl border-x border-gray-100"
+      className="fixed inset-0 bg-white z-[100] flex flex-col w-full max-w-md mx-auto h-full safe-area-inset"
     >
       {/* Header */}
-      <div className="px-4 py-4 flex items-center justify-between border-b border-gray-100">
-        <button onClick={onClose} className="text-gray-500">
+      <div className="px-4 py-4 flex items-center justify-between border-b border-gray-100 flex-none">
+        <button onClick={onClose} className="text-gray-500 p-2 -ml-2">
           <X size={24} />
         </button>
-        <h2 className="text-lg font-bold">{label}</h2>
+        <h2 className="text-lg font-bold flex-1 text-center pr-8">{label}</h2>
         <button 
           onClick={handleConfirm}
-          className="text-blue-600 font-bold"
+          className="text-blue-600 font-bold px-2 py-1"
         >
           完成
         </button>
@@ -122,23 +136,35 @@ export const RecordingModal: React.FC<RecordingModalProps> = ({ label, hint, ini
           {/* Controls */}
           <div className="w-full pb-12 flex flex-col items-center gap-6 mt-auto">
             {recordingData && !isRecording ? (
-              <div className="flex items-center gap-10">
+              <div className="flex items-center gap-8 sm:gap-10">
                 <button 
                   onClick={handleDelete}
-                  className="w-12 h-12 rounded-full bg-red-50 text-red-500 flex items-center justify-center hover:bg-red-100 transition-colors"
+                  className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-red-50 text-red-500 flex items-center justify-center hover:bg-red-100 transition-colors active:scale-95"
                   title="删除"
                 >
                   <Trash2 size={20} />
                 </button>
-                <button className="w-20 h-20 rounded-full bg-blue-600 text-white flex items-center justify-center shadow-xl shadow-blue-200 active:scale-95 transition-transform">
+                <button 
+                  onClick={handlePlay}
+                  className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-blue-600 text-white flex items-center justify-center shadow-xl shadow-blue-200 active:scale-95 transition-transform"
+                >
                   <Play size={32} fill="currentColor" className="ml-1" />
                 </button>
-                <div className="w-12 h-12" /> {/* Spacer */}
+                <button 
+                  onClick={() => {
+                    setRecordingData(null);
+                    setIsRecording(false);
+                  }}
+                  className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-gray-100 text-gray-600 flex items-center justify-center hover:bg-gray-200 transition-colors active:scale-95"
+                  title="重录"
+                >
+                  <Mic size={20} />
+                </button>
               </div>
             ) : (
               <button 
                 onClick={isRecording ? stopRecording : startRecording}
-                className={`w-24 h-24 rounded-full flex items-center justify-center transition-all shadow-2xl relative ${
+                className={`w-24 h-24 sm:w-28 sm:h-28 rounded-full flex items-center justify-center transition-all shadow-2xl relative ${
                   isRecording 
                     ? 'bg-red-500 text-white' 
                     : 'bg-blue-600 text-white'
@@ -157,8 +183,8 @@ export const RecordingModal: React.FC<RecordingModalProps> = ({ label, hint, ini
               </button>
             )}
             
-            <p className="text-sm text-gray-400 font-medium text-center">
-              {isRecording ? '点击红色按钮停止录音' : recordingData ? '您可以试听或重新录制' : '点击蓝色按钮开始录音'}
+            <p className="text-sm text-gray-400 font-medium text-center px-4">
+              {isRecording ? '点击红色按钮停止录音' : recordingData ? '您可以试听、删除或重新录制' : '点击蓝色按钮开始录音'}
             </p>
           </div>
         </div>
