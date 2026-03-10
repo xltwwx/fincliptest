@@ -1,1 +1,1 @@
-(miniprogram/.gitignore - since this appears to be a WeChat Mini Program project, we typically don't want to ignore the source files like .js, .wxml, .wxss as they are the core application code)
+Nothing needs to be added to .gitignore since only a TypeScript React component file (.tsx) was modified and no build artifacts, dependencies, or temporary files were detected in the changes.

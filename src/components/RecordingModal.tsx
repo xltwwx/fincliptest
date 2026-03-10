@@ -42,7 +42,7 @@ const TimerDisplay: React.FC<{ isRecording: boolean }> = ({ isRecording }) => {
 
 export const RecordingModal: React.FC<RecordingModalProps> = ({ label, hint, initialValue, onSave, onClose }) => {
   const [isRecording, setIsRecording] = useState(false);
-  const [recordingData, setRecordingData] = useState<string | null>(initialValue || null);
+  const [recordingData, setRecordingData] = useState<string | null>(null);
 
   useEffect(() => {
     // Lock body scroll on mount
@@ -54,6 +54,12 @@ export const RecordingModal: React.FC<RecordingModalProps> = ({ label, hint, ini
       document.body.style.overflow = originalStyle;
     };
   }, []);
+
+  useEffect(() => {
+    if (initialValue) {
+      setRecordingData(initialValue);
+    }
+  }, [initialValue]);
 
   const startRecording = () => {
     setIsRecording(true);
@@ -89,7 +95,8 @@ export const RecordingModal: React.FC<RecordingModalProps> = ({ label, hint, ini
         <h2 className="text-lg font-bold">{label}</h2>
         <button 
           onClick={handleConfirm}
-          className="text-blue-600 font-bold"
+          disabled={!recordingData}
+          className={`font-bold ${!recordingData ? 'text-gray-300' : 'text-blue-600'}`}
         >
           完成
         </button>
