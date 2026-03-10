@@ -76,10 +76,24 @@ Page({
 
   onModuleTap(e) {
     const module = e.currentTarget.dataset.module;
+    const moduleId = module.id;
+    
+    // 检查该模块是否已有录音数据
+    const existingContent = this.data.formData.recordings[moduleId];
+    
     // 清除之前的临时录音数据
     wx.removeStorageSync('tempRecording');
+    
+    // 如果已有录音，先保存到临时存储以便录音页面恢复
+    if (existingContent) {
+      wx.setStorageSync('tempRecording', {
+        moduleId: moduleId,
+        content: existingContent
+      });
+    }
+    
     wx.navigateTo({
-      url: `/pages/recording/recording?moduleId=${module.id}&title=${encodeURIComponent(module.title)}&hint=${encodeURIComponent(module.hint)}`
+      url: `/pages/recording/recording?moduleId=${moduleId}&title=${encodeURIComponent(module.title)}&hint=${encodeURIComponent(module.hint)}`
     });
   },
 

@@ -40,8 +40,22 @@ Page({
         hasExistingRecording: true,
         recordingContent: tempData.content,
         isRecording: false,
+        timer: 0,
+        formattedTime: '00:00',
         statusText: '录音已完成',
-        controlHint: '您可以试听或重新录制'
+        controlHint: '您可以试听、删除或重新录制'
+      });
+    } else {
+      // 没有已有录音，重置状态
+      this.setData({
+        hasRecording: false,
+        hasExistingRecording: false,
+        recordingContent: '',
+        isRecording: false,
+        timer: 0,
+        formattedTime: '00:00',
+        statusText: '准备就绪',
+        controlHint: '点击麦克风按钮开始录音'
       });
     }
   },
@@ -99,13 +113,13 @@ Page({
       
       recorderManager.onStop((res) => {
         console.log('recorder stop', res);
-        // 保存录音数据（模拟）
+        // 保存录音数据
         const content = `录音文件：${res.tempFilePath} - ${new Date().toLocaleTimeString()}`;
         this.setData({
           hasRecording: true,
           recordingContent: content,
           statusText: '录音已完成',
-          controlHint: '您可以试听或重新录制'
+          controlHint: '您可以试听、删除或重新录制'
         });
         
         // 保存到临时存储
@@ -145,7 +159,7 @@ Page({
       hasExistingRecording: true,
       recordingContent: content,
       statusText: '录音已完成',
-      controlHint: '您可以试听或重新录制'
+      controlHint: '您可以试听、删除或重新录制'
     });
     
     wx.setStorageSync('tempRecording', {
@@ -156,7 +170,9 @@ Page({
 
   stopRecording() {
     this.setData({
-      isRecording: false
+      isRecording: false,
+      statusText: '录音已完成',
+      controlHint: '您可以试听、删除或重新录制'
     });
     this.stopTimer();
 
@@ -171,33 +187,34 @@ Page({
 
   onReRecord() {
     // 删除当前录音，准备重新录制
-    this.setData({
-      hasRecording: false,
-      hasExistingRecording: false,
-      recordingContent: '',
-      timer: 0,
-      formattedTime: '00:00',
-      statusText: '准备就绪',
-      controlHint: '点击蓝色按钮开始录音'
+    wx.showModal({
+      title: '确认重新录制',
+      content: '是否删除当前录音并重新录制？',
+      success: (res) => {
+        if (res.confirm) {
+          this.setData({
+            hasRecording: false,
+            hasExistingRecording: false,
+            recordingContent: '',
+            timer: 0,
+            formattedTime: '00:00',
+            statusText: '准备就绪',
+            controlHint: '点击麦克风按钮开始录音'
+          });
+          wx.removeStorageSync('tempRecording');
+        }
+      }
     });
-    wx.removeStorageSync('tempRecording');
   },
 
   onDelete() {
-    // 仅在有已有录音时显示删除确认
-    if (this.data.hasExistingRecording) {
-      wx.showModal({
-        title: '确认删除',
-        content: '是否删除当前录音并重新录制？',
-        success: (res) => {
-          if (res.confirm) {
-            this.onReRecord();
-          }
-        }
-      });
-    } else {
-      this.onReRecord();
-    }
+    // 此方法已废弃，使用 onReRecord 替代
+    this.onReRecord();
+  },
+
+  onReRecordConfirm() {
+    // 此方法已废弃，删除按钮直接调用 onReRecord
+    this.onDelete();
   },
 
   onPlay() {
