@@ -11,7 +11,7 @@
     </view>
   </view>
 
-  <!-- Content -->
+  <!-- Content - Scrollable Area -->
   <scroll-view class="content" scroll-y="true">
     <!-- Hint -->
     <view class="hint-box">
@@ -25,25 +25,27 @@
     <!-- Timer/Status -->
     <view class="timer-section">
       <text class="timer">{{formattedTime}}</text>
-      <view class="status-badge">
+      <view class="status-badge {{isRecording ? 'recording-status' : ''}}">
         <text class="status-text">{{statusText}}</text>
       </view>
     </view>
 
     <!-- Controls -->
     <view class="controls-section">
-      <!-- Has recording, not recording -->
+      <!-- Has recording, not recording: show delete, play, re-record buttons -->
       <view wx:if="{{hasRecording && !isRecording}}" class="controls-row">
-        <view class="control-btn re-record-btn" bindtap="onDelete">
-          <text class="btn-icon">🔄</text>
+        <view class="control-btn delete-btn" bindtap="onDelete">
+          <text class="btn-icon">🗑️</text>
         </view>
         <view class="control-btn play-btn" bindtap="onPlay">
           <text class="btn-icon-large">▶</text>
         </view>
-        <view class="control-btn placeholder"></view>
+        <view class="control-btn re-record-btn" bindtap="onReRecord">
+          <text class="btn-icon">🔄</text>
+        </view>
       </view>
 
-      <!-- Recording or no recording -->
+      <!-- Recording or no recording: show main record button -->
       <view wx:else class="main-record-btn" bindtap="onRecordTap">
         <view class="record-btn-inner {{isRecording ? 'recording' : ''}}">
           <text wx:if="{{!isRecording}}" class="mic-icon">🎤</text>
