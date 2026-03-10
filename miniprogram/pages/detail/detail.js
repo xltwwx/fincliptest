@@ -76,6 +76,8 @@ Page({
 
   onModuleTap(e) {
     const module = e.currentTarget.dataset.module;
+    // 清除之前的临时录音数据
+    wx.removeStorageSync('tempRecording');
     wx.navigateTo({
       url: `/pages/recording/recording?moduleId=${module.id}&title=${encodeURIComponent(module.title)}&hint=${encodeURIComponent(module.hint)}`
     });
@@ -121,7 +123,11 @@ Page({
       this.setData({
         [key]: recordingData.content
       });
-      wx.removeStorageSync('tempRecording');
+      // 不清除临时数据，等到下次进入录音页再清除
     }
+  },
+
+  onBack() {
+    wx.navigateBack();
   }
 })

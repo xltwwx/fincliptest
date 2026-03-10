@@ -15,12 +15,14 @@
     <view class="card basic-info">
       <view class="form-item">
         <text class="label">客户号</text>
-        <input 
-          class="input" 
-          placeholder="请输入客户号" 
-          value="{{formData.customerId}}"
-          bindinput="onCustomerIdInput"
-        />
+        <view class="input-wrapper">
+          <input 
+            class="input" 
+            placeholder="请输入客户号" 
+            value="{{formData.customerId}}"
+            bindinput="onCustomerIdInput"
+          />
+        </view>
       </view>
       <view class="form-item">
         <text class="label">业务类型</text>

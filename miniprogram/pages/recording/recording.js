@@ -189,7 +189,7 @@ Page({
   },
 
   onClose() {
-    wx.removeStorageSync('tempRecording');
+    // 不清除临时数据，保留录音结果
     wx.navigateBack();
   }
 })
