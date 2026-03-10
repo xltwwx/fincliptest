@@ -8,6 +8,7 @@ Page({
     hint: '',
     isRecording: false,
     hasRecording: false,
+    hasExistingRecording: false,  // 标记是否有已存在的录音
     recordingContent: '',
     timer: 0,
     formattedTime: '00:00',
@@ -23,11 +24,22 @@ Page({
     });
 
     // 检查是否已有录音
+    this.checkExistingRecording();
+  },
+
+  onShow() {
+    // 每次显示时检查是否有录音数据
+    this.checkExistingRecording();
+  },
+
+  checkExistingRecording() {
     const tempData = wx.getStorageSync('tempRecording');
     if (tempData && tempData.moduleId === this.data.moduleId && tempData.content) {
       this.setData({
         hasRecording: true,
+        hasExistingRecording: true,
         recordingContent: tempData.content,
+        isRecording: false,
         statusText: '录音已完成',
         controlHint: '您可以试听或重新录制'
       });
@@ -130,6 +142,7 @@ Page({
     this.setData({
       isRecording: false,
       hasRecording: true,
+      hasExistingRecording: true,
       recordingContent: content,
       statusText: '录音已完成',
       controlHint: '您可以试听或重新录制'
@@ -156,9 +169,11 @@ Page({
     }
   },
 
-  onDelete() {
+  onReRecord() {
+    // 删除当前录音，准备重新录制
     this.setData({
       hasRecording: false,
+      hasExistingRecording: false,
       recordingContent: '',
       timer: 0,
       formattedTime: '00:00',
@@ -166,6 +181,23 @@ Page({
       controlHint: '点击蓝色按钮开始录音'
     });
     wx.removeStorageSync('tempRecording');
+  },
+
+  onDelete() {
+    // 仅在有已有录音时显示删除确认
+    if (this.data.hasExistingRecording) {
+      wx.showModal({
+        title: '确认删除',
+        content: '是否删除当前录音并重新录制？',
+        success: (res) => {
+          if (res.confirm) {
+            this.onReRecord();
+          }
+        }
+      });
+    } else {
+      this.onReRecord();
+    }
   },
 
   onPlay() {
@@ -180,6 +212,16 @@ Page({
 
   onComplete() {
     if (this.data.hasRecording) {
+      // 保存录音数据到模块
+      const tempData = wx.getStorageSync('tempRecording');
+      if (tempData) {
+        // 通知 detail 页面更新录音数据
+        const pages = getCurrentPages();
+        const prevPage = pages[pages.length - 2];
+        if (prevPage && prevPage.updateRecordingData) {
+          prevPage.updateRecordingData(this.data.moduleId, tempData.content);
+        }
+      }
       wx.navigateBack();
     } else {
       // 没有录音也允许返回，清空该模块的录音
