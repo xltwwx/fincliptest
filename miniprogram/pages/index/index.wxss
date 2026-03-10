@@ -147,3 +147,31 @@
   font-size: 56rpx;
   font-weight: 300;
 }
+
+/* 小屏幕适配 */
+@media (max-width: 375px) {
+  .header {
+    padding: 32rpx 24rpx 24rpx;
+  }
+  
+  .title {
+    font-size: 36rpx;
+  }
+  
+  .case-card {
+    padding: 20rpx;
+  }
+  
+  .case-name {
+    font-size: 28rpx;
+  }
+  
+  .fab {
+    width: 112rpx;
+    height: 112rpx;
+  }
+  
+  .fab-icon {
+    font-size: 48rpx;
+  }
+}

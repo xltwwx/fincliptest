@@ -6,7 +6,10 @@
       <text class="back-icon">←</text>
     </view>
     <text class="title">{{formData.name || '新开案例'}}</text>
-    <view class="placeholder"></view>
+    <view class="edit-btn" wx:if="{{!isNewCase}}" bindtap="onEditCase">
+      <text class="edit-text">修改</text>
+    </view>
+    <view class="placeholder" wx:else></view>
   </view>
 
   <!-- Scrollable Content -->
@@ -34,6 +37,13 @@
         >
           <view class="picker-value">{{businessTypes[businessTypeIndex]}}</view>
         </picker>
+      </view>
+      <!-- 修改按钮区域 -->
+      <view class="modify-section" wx:if="{{!isNewCase}}">
+        <view class="modify-btn" bindtap="onModifyBusinessType">
+          <text class="modify-icon">✏️</text>
+          <text class="modify-text">修改类型</text>
+        </view>
       </view>
     </view>
 

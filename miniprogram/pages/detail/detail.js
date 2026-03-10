@@ -83,6 +83,14 @@ Page({
     });
   },
 
+  // 更新录音数据的方法（供 recording 页面调用）
+  updateRecordingData(moduleId, content) {
+    const key = `formData.recordings.${moduleId}`;
+    this.setData({
+      [key]: content
+    });
+  },
+
   onSubmitTap() {
     this.setData({ showConfirm: true });
   },
@@ -125,6 +133,46 @@ Page({
       });
       // 不清除临时数据，等到下次进入录音页再清除
     }
+  },
+
+  // 编辑已有案例的方法
+  onEditCase() {
+    wx.showModal({
+      title: '修改案例信息',
+      editable: true,
+      placeholderText: '请输入客户号',
+      success: (res) => {
+        if (res.confirm && res.content) {
+          this.setData({
+            'formData.customerId': res.content
+          });
+          wx.showToast({
+            title: '修改成功',
+            icon: 'success'
+          });
+        }
+      }
+    });
+  },
+
+  // 修改业务类型
+  onModifyBusinessType() {
+    wx.showActionSheet({
+      itemList: this.data.businessTypes,
+      success: (res) => {
+        const index = res.tapIndex;
+        const type = this.data.businessTypes[index];
+        this.setData({
+          businessTypeIndex: index,
+          'formData.businessType': type,
+          'formData.type': type
+        });
+        wx.showToast({
+          title: '修改成功',
+          icon: 'success'
+        });
+      }
+    });
   },
 
   onBack() {

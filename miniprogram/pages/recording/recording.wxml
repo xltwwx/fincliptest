@@ -34,8 +34,8 @@
     <view class="controls-section">
       <!-- Has recording, not recording -->
       <view wx:if="{{hasRecording && !isRecording}}" class="controls-row">
-        <view class="control-btn delete-btn" bindtap="onDelete">
-          <text class="btn-icon">🗑️</text>
+        <view class="control-btn re-record-btn" bindtap="onDelete">
+          <text class="btn-icon">🔄</text>
         </view>
         <view class="control-btn play-btn" bindtap="onPlay">
           <text class="btn-icon-large">▶</text>

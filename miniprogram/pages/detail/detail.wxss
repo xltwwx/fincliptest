@@ -43,6 +43,46 @@
   width: 48rpx;
 }
 
+.edit-btn {
+  width: 64rpx;
+  height: 48rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.edit-text {
+  font-size: 26rpx;
+  font-weight: bold;
+  color: #2563eb;
+}
+
+.modify-section {
+  margin-top: 16rpx;
+  padding-top: 16rpx;
+  border-top: 1rpx solid #f3f4f6;
+}
+
+.modify-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+  padding: 16rpx;
+  background-color: #fef3c7;
+  border-radius: 16rpx;
+}
+
+.modify-icon {
+  font-size: 24rpx;
+}
+
+.modify-text {
+  font-size: 24rpx;
+  color: #92400e;
+  font-weight: 500;
+}
+
 .content {
   flex: 1;
   padding: 20rpx;
@@ -266,4 +306,39 @@
 .btn-cancel::after,
 .btn-confirm::after {
   border: none;
+}
+
+/* 小屏幕适配 */
+@media (max-width: 375px) {
+  .header {
+    padding: 20rpx;
+  }
+  
+  .title {
+    font-size: 28rpx;
+    margin: 0 16rpx;
+  }
+  
+  .content {
+    padding: 16rpx;
+  }
+  
+  .card {
+    padding: 20rpx;
+    border-radius: 24rpx;
+  }
+  
+  .module-card {
+    padding: 20rpx;
+  }
+  
+  .submit-btn {
+    width: 260rpx;
+    font-size: 28rpx;
+  }
+  
+  .modal-content {
+    width: 540rpx;
+    padding: 40rpx;
+  }
 }
